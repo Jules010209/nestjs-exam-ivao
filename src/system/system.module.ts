@@ -5,6 +5,8 @@ import { ApiService } from './controllers/api/api.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConnexionService } from './controllers/connexion/connexion.service';
 import { db } from '../../config.json';
+import { UserController } from './controllers/user/user.controller';
+import { UserService } from './controllers/user/user.service';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { db } from '../../config.json';
       database: db.database
     }),
   ],
-  controllers: [ApiController, ConnexionController],
-  providers: [ApiService, ConnexionService]
+  controllers: [ApiController, ConnexionController, UserController],
+  providers: [ApiService, ConnexionService, UserService]
 })
 export class SystemModule {}

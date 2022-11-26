@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Req, Res, Session } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -13,7 +13,7 @@ export class AppController {
 
     @Get('/atcs')
     @Render('atcs')
-    atc(@Res() res:any, @Req() req:any, @Session() session:Record<string, any>) {
-        return "";
+    atcs(@Req() req:any) {
+        return { session: req.session };
     }
 }

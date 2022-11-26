@@ -18,8 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "gen": "nest g service /src/app"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -30,6 +29,7 @@
     "ejs": "^3.1.8",
     "express-session": "^1.17.3",
     "g": "^2.0.1",
+    "moment": "^2.29.4",
     "mysql2": "^2.3.3",
     "nestjs": "^0.0.1",
     "reflect-metadata": "^0.1.13",

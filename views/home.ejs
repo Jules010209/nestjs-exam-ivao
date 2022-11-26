@@ -9,6 +9,25 @@
 <body>
     <% if(session.user_id) { %>
         <h4>Hi <%= session.user_id %>, Welcome</h4>
+
+        <br><br>
+
+        <label>ATCS Calendar</label>
+        <input type="date" id="atc-calendar">
+        <a id="search" href="#">Search</a>
+
+        <script>
+            let dataCalendar = document.getElementById('atc-calendar');
+
+            dataCalendar.addEventListener('change', () => {
+                search.href = `/api/calendar/${dataCalendar.value}`;
+            });
+
+            search.href = `/api/calendar/`;
+        </script>
+
+        <br><br>
+
         <a href="/atcs">Reservation ATCS</a>
         <a href="/connexion/logout">Logout</a>
     <% } else { %>

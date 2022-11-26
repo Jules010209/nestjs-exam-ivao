@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { genSalt, hash } from 'bcryptjs';
+import { genSalt, hash, compare } from 'bcryptjs';
 import { Sequelize } from 'sequelize-typescript';
 import { QueryTypes } from 'sequelize';
-import { compare } from 'bcryptjs';
 
 @Injectable()
 export class ConnexionService {

@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, Session } from '@nestjs/common';
 import { ApiService } from './api.service';
 
 @Controller('api')
 export class ApiController {
     constructor(private readonly apiService: ApiService) {}
-    // @Post('/post/callback')
-    // APIPostCallback(@Body, body) {
-
-    // }
+    @Post('/post/callback')
+    async APIPostCallback(@Body() body:any, @Res() res:any, @Session() session:any) {
+        return await this.apiService.bookPosition(body, res, session);
+    }
 
     @Get('/get/:id')
     async APIGetId(@Param('id') id:any) {
@@ -17,5 +17,19 @@ export class ApiController {
     @Get('/calendar/:day')
     async APIGetCalendar(@Param('day') day:any) {
         return await this.apiService.getCalendar(day);
+    }
+
+    @Get('/calendar')
+    async APIRedirectCalendar(@Res() res:any, @Session() session:Record<string, any>) {
+        var currDate = new Date();
+        var year = currDate.toLocaleString('en-US', { year: 'numeric'});
+        var month = currDate.toLocaleString('en-US', { month: '2-digit'});
+        var day = currDate.toLocaleString('en-US', { day: '2-digit'});
+
+        if(session.user_id) {
+            return await res.redirect(`/api/calendar/${year + "-" + month + "-" + day}`);
+        } else {
+            return await res.status(401).send("You don't have this permission sorry.");
+        }
     }
 }
