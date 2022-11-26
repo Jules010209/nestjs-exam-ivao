@@ -7,6 +7,16 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 </head>
 <body>
-    {{ message }}
+    <% if(session.user_id) { %>
+        <h4>Hi <%= session.user_id %>, Welcome</h4>
+        <a href="/atcs">Reservation ATCS</a>
+        <a href="/connexion/logout">Logout</a>
+    <% } else { %>
+        <h4>Hi Anonymous user</h4>
+        <div class="register_login">
+            <a href="/connexion/register">Register page</a>
+            <a href="/connexion/login">Login page</a>
+        </div>
+    <% } %>
 </body>
 </html>

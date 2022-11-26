@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title><%= title %></title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">Register</div>
+        <div class="card-body">
+            <form action="/connexion/register/callback" method="post">
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="user_email_address" name="user_email_address" class="form-control" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="user_password" name="user_password" class="form-control" required>
+                </div>
+                <div>
+                    <label>Facility</label>
+                    <select name="facility">
+                        <option value="AS1">AS1</option>
+                        <option value="AS2">AS2</option>
+                        <option value="AS3">AS3</option>
+                        <option value="ADC">ADC</option>
+                        <option value="APC">APC</option>
+                        <option value="ACC">ACC</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

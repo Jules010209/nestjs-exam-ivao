@@ -18,26 +18,34 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "gen": "nest g service /src/app"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/sequelize": "^9.0.0",
+    "bcryptjs": "^2.4.3",
     "ejs": "^3.1.8",
+    "express-session": "^1.17.3",
+    "g": "^2.0.1",
     "mysql2": "^2.3.3",
+    "nestjs": "^0.0.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sequelize": "^6.25.8",
-    "sequelize-typescript": "^2.1.5"
+    "sequelize-typescript": "^2.1.5",
+    "typescript": "^4.9.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.5",
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
     "@types/sequelize": "^4.28.14",
@@ -54,8 +62,7 @@
     "ts-jest": "28.0.8",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "4.1.0",
-    "typescript": "^4.7.4"
+    "tsconfig-paths": "4.1.0"
   },
   "jest": {
     "moduleFileExtensions": [
