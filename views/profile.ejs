@@ -7,6 +7,57 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 </head>
 <body>
+    <% if(session.user_id) { %>
+        <div align="center" class="row">
+            <h1>Profile</h1>
     
+            <br>
+    
+            <h3>VID : <%= db_a['vid'] %></h3>
+            <h3>EMAIL : <%= db_a['email'] %></h3>
+    
+            <br><br>
+    
+            <% if(db_b['user'] !== "" || db_b['user'] !== undifined) { %>
+                <table>
+                    <caption style="caption-side:top">My book</caption>
+                    <tr>
+                        <th>ID</th>
+                        <th>USER</th>
+                        <th>START TIME</th>
+                        <th>END TIME</th>
+                        <th>DATE</th>
+                        <th>POSITION</th>
+                        <th>VOICE</th>
+                        <th>TRAINING</th>
+                        <th>EVENT</th>
+                    </tr>
+                    <tr>
+                        <td><%= db_b['id'] %></td>
+                        <td><%= db_b['user'] %></td>
+                        <td><%= db_b['start_time'] %></td>
+                        <td><%= db_b['end_time'] %></td>
+                        <td><%= db_b['date'] %></td>
+                        <td><%= db_b['position'] %></td>
+                        <td><%= db_b['voice'] %></td>
+                        <td><%= db_b['training'] %></td>
+                        <td><%= db_b['event'] %></td>
+                    </tr>
+                </table>
+
+                <br>
+
+                <a href="/user/edit">EDIT</a>-<a href="/user/delete">DELETE</a>
+            <% } else { %>
+                <div>
+                    <p>E</p>
+                </div>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div>
+            <p>You must be logged in to see your profile ! Return to <a href="/">home</a></p>
+        </div>
+    <% } %>
 </body>
 </html>
