@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Render, Res, Session } from '@nestjs/common';
+import { Body, Controller, Get, Post, Render, Res, Session } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -12,7 +12,7 @@ export class UserController {
 
         return await this.userService.getProfile(session);
     }
-
+    
     @Get('/edit')
     @Render('edit')
     async getEditProfile(@Session() session:any) {
@@ -20,12 +20,12 @@ export class UserController {
     }
 
     @Post('/edit/callback')
-    async postEditProfile(@Res() res:any, @Session() session:any) {
-        return await this.userService.postEditProfile(res, session);
+    async postEditProfile(@Body() body:any, @Res() res:any, @Session() session:any) {
+        return await this.userService.postEditProfile(body, res, session);
     }
 
     @Get('/delete')
-    async getDelete(@Session() session:any) {
-
+    async getDelete(@Res() res:any, @Session() session:any) {
+        return await this.userService.deleteBook(res, session);
     }
 }
