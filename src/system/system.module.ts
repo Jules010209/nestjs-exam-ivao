@@ -17,10 +17,7 @@ import { UserService } from './controllers/user/user.service';
       port: parseInt(db.port),
       username: db.user,
       password: db.password,
-      database: db.database,
-      define: {
-        freezeTableName: true
-      }
+      database: db.database
     }),
   ],
   controllers: [ApiController, ConnexionController, UserController],

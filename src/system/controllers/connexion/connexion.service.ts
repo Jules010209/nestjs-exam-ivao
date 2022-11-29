@@ -1,13 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { genSalt, hash, compare } from 'bcryptjs';
-import { Sequelize } from 'sequelize-typescript';
-import { QueryTypes } from 'sequelize';
+import { User } from 'src/models/User';
 
 @Injectable()
 export class ConnexionService {
-    constructor(private readonly sequelize: Sequelize) {}
-
-    async registerCallback(body:any, res:any, req:any) {
+    async registerCallback(body:any, res:any, session:any) {
         let email = body.user_email_address;
         let password = body.user_password;
         let facility = body.facility;
@@ -15,22 +12,23 @@ export class ConnexionService {
         let salt = await genSalt(10);
         let Hash = await hash(password, salt);
 
-        let getSql = await this.sequelize.query(`SELECT * FROM user_list WHERE email = "${email}"`, { type: QueryTypes.SELECT, raw: true });
-        
-        if(getSql.length > 0) throw new BadRequestException('Error ! This email is already use !');
-
-        await this.sequelize.query(`INSERT INTO user_list (email, password, facility) VALUES ("${email}", "${Hash}", "${facility}")`, { type: QueryTypes.INSERT });
+        let getSql = await User.findAndCountAll({ where: { email: email } });
+        if(getSql.count > 0) throw new BadRequestException('Error ! This email is already use !');
 
         try {
-            let getSql2 = await this.sequelize.query(`SELECT * FROM user_list WHERE email = "${email}"`, { type: QueryTypes.SELECT, raw: true });
-
-            for(var e = 0; e < getSql2.length; e++) {
-                req.session.user_id = getSql2[e]['vid'];
-            }
+            User.create({
+                email: email,
+                password: Hash,
+                facility: facility
+            }).then(async () => {
+                let user = await User.findOne({ where: { email: email }, raw: true });
     
-            return res.redirect('/');
+                session.user_id = user['vid'];
+    
+                return res.redirect('/');
+            });
         } catch(err) {
-            throw new BadRequestException(err);
+            throw new InternalServerErrorException(err);
         }
     }
 
@@ -38,16 +36,17 @@ export class ConnexionService {
         let email = body.user_email_address;
         let password = body.user_password;
 
-        let getSql = await this.sequelize.query(`SELECT * FROM user_list WHERE email = "${email}"`, { type: QueryTypes.SELECT, raw: true });
-
-        if(getSql.length < 1) throw new BadRequestException('Incorrect email !');
+        let count = await User.findAndCountAll({ where: { email: email }, raw: true });
+        let user = await User.findOne({ where: { email: email }, raw: true });
         
-        for(var e = 0; e < getSql.length; e++) {
-            let cPassword = await compare(password, getSql[e]['password']);
+        if(count.count < 1) throw new BadRequestException('Incorrect email !');
+        
+        for(var e = 0; e < count.count; e++) {
+            let cPassword = await compare(password, user['password']);
 
             if(!cPassword) throw new BadRequestException('Incorrect password !');
             
-            req.session.user_id = getSql[e]['vid'];
+            req.session.user_id = user['vid'];
 
             return res.redirect('/');
         }

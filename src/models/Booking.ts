@@ -1,5 +1,5 @@
-import { Sequelize, DataType } from 'sequelize-typescript';
-const sequelize = new Sequelize();
+import { DataType } from 'sequelize-typescript';
+import { sequelize } from 'src/dto/database.dto';
 
 const Booking = sequelize.define('booking', {
     id: {
@@ -41,7 +41,7 @@ const Booking = sequelize.define('booking', {
         allowNull: false
     }
 }, {
-    freezeTableName: true
+    timestamps: false,
 });
 
 Booking.sync().catch((err) => console.error(err));

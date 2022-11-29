@@ -18,8 +18,8 @@ export class ConnexionController {
     }
     
     @Post('/register/callback')
-    async getRegisterCallback(@Body() body:any, @Res() res:any, @Req() req:any) {
-        return this.connexionService.registerCallback(body, res, req);
+    async getRegisterCallback(@Body() body:any, @Res() res:any, @Session() session:any) {
+        return this.connexionService.registerCallback(body, res, session);
     }
 
     @Post('/login/callback')

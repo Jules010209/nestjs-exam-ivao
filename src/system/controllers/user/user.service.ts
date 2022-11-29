@@ -1,22 +1,21 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { Sequelize } from 'sequelize-typescript';
-import { QueryTypes } from 'sequelize';
+import { User } from 'src/models/User';
+import { Booking } from 'src/models/Booking';
 
 @Injectable()
 export class UserService {
-    constructor(private readonly sequelize: Sequelize) {}
-
     async getProfile(session:any) {
-        let query_a = await this.sequelize.query(`SELECT * FROM user_list WHERE vid = ${session.user_id}`, { type: QueryTypes.SELECT, raw: true });
+        let query_a = await User.findOne({ where: { vid: session.user_id }, raw: true });
 
         let db_a = {
-            vid: query_a[0]['vid'],
-            email: query_a[0]['email'],
-            password: query_a[0]['password']
+            vid: query_a['vid'],
+            email: query_a['email'],
+            password: query_a['password']
         };
 
-        let query_b = await this.sequelize.query(`SELECT * FROM booking_list WHERE user = '${session.user_id}'`, { type: QueryTypes.SELECT, raw: true });
-        
+        let query_b = await Booking.findOne({ where: { user: session.user_id }, raw: true });
+        let b_count = await Booking.findAndCountAll({ where: { user: session.user_id } });
+
         let db_b = {
             id: null,
             user: null,
@@ -29,16 +28,16 @@ export class UserService {
             event: null
         }
 
-        if(query_b.length > 0) {
-            db_b.id = query_b[0]['id'];
-            db_b.user =  query_b[0]['user'];
-            db_b.start_time = query_b[0]['start_hour'];
-            db_b.end_time = query_b[0]['end_hour'];
-            db_b.date = query_b[0]['day'];
-            db_b.position = query_b[0]['position'];
-            db_b.voice = query_b[0]['voice'];
-            db_b.training = query_b[0]['training'];
-            db_b.event = query_b[0]['event'];
+        if(b_count.count > 0) {
+            db_b.id = query_b['id'];
+            db_b.user =  query_b['user'];
+            db_b.start_time = query_b['start_hour'];
+            db_b.end_time = query_b['end_hour'];
+            db_b.date = query_b['day'];
+            db_b.position = query_b['position'];
+            db_b.voice = query_b['voice'];
+            db_b.training = query_b['training'];
+            db_b.event = query_b['event'];
         }
 
         return { session: session, db_a: db_a, db_b: db_b };
@@ -54,14 +53,20 @@ export class UserService {
         let event = body.event;
 
         if(start_time !== end_time || end_time !== start_time) {
-            let Is = await this.sequelize.query(`SELECT * FROM booking_list WHERE user = "${session.user_id}"`, { type: QueryTypes.SELECT, raw: true });
+            let Is = await Booking.findAndCountAll({ where: { user: session.user_id }});
 
-            if(Is.length > 0) {
+            if(Is.count > 0) {
                 try {
-                    let sql = `UPDATE booking_list SET start_hour = '${start_time}', end_hour = '${end_time}', day = '${date}', position = '${position}', voice = ${parseInt(voice) ? parseInt(voice) : 0}, training = ${parseInt(training) ? parseInt(training) : 0}, event = ${parseInt(event) ? parseInt(event) : 0} WHERE user = '${session.user_id}'`;
-    
-                    await this.sequelize.query(sql, { type: QueryTypes.UPDATE });
-    
+                    await Booking.update({
+                        start_hour: start_time,
+                        end_hour: end_time,
+                        day: date,
+                        position: position,
+                        voice: parseInt(voice) ? parseInt(voice) : 0,
+                        training: parseInt(training) ? parseInt(training) : 0,
+                        event: parseInt(event) ? parseInt(event) : 0,
+                    }, { where: { user: session.user_id } });
+
                     return res.redirect('/user/profile');
                 } catch(err) {
                     throw new InternalServerErrorException(err);
@@ -75,9 +80,7 @@ export class UserService {
     }
 
     async deleteBook(res:any, session:any) {
-        let sql = `DELETE FROM booking_list WHERE user = '${session.user_id}'`;
-
-        await this.sequelize.query(sql, { type: QueryTypes.DELETE });
+        Booking.destroy({ where: { user: session.user_id } });
 
         return res.redirect('/');
     }

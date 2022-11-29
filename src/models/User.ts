@@ -1,48 +1,27 @@
-import { Sequelize, DataType } from 'sequelize-typescript';
-import { db } from '../../config.json';
-const sequelize = new Sequelize();
+import { DataType } from 'sequelize-typescript';
+import { sequelize } from 'src/dto/database.dto';
 
 const User = sequelize.define('user', {
-    id: {
+    vid: {
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    user: {
+    email: {
         type: DataType.STRING,
         allowNull: false
     },
-    start_hour: {
-        type: DataType.TIME,
-        allowNull: false
-    },
-    end_hour: {
-        type: DataType.TIME,
-        allowNull: false
-    },
-    day: {
+    password: {
         type: DataType.STRING,
         allowNull: false
     },
-    position: {
+    facility: {
         type: DataType.STRING,
-        allowNull: false
-    },
-    voice: {
-        type: DataType.INTEGER,
-        allowNull: false
-    },
-    training: {
-        type: DataType.INTEGER,
-        allowNull: false
-    },
-    event: {
-        type: DataType.INTEGER,
         allowNull: false
     }
 }, {
-    freezeTableName: true
+    timestamps: false
 });
 
 User.sync().catch((err) => console.error(err));
