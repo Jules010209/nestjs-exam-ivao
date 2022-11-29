@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, Session } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, Session, UnauthorizedException } from '@nestjs/common';
 import { ApiService } from './api.service';
 
 @Controller('api')
@@ -26,10 +26,8 @@ export class ApiController {
         var month = currDate.toLocaleString('en-US', { month: '2-digit'});
         var day = currDate.toLocaleString('en-US', { day: '2-digit'});
 
-        if(session.user_id) {
-            return await res.redirect(`/api/calendar/${year + "-" + month + "-" + day}`);
-        } else {
-            return await res.status(401).send("You don't have this permission sorry.");
-        }
+        if(!session.user_id) throw new UnauthorizedException("You don't have this permission sorry.");
+        
+        return await res.redirect(`/api/calendar/${year + "-" + month + "-" + day}`);
     }
 }

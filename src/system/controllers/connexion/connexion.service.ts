@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { Sequelize } from 'sequelize-typescript';
 import { QueryTypes } from 'sequelize';
@@ -16,8 +16,8 @@ export class ConnexionService {
         let Hash = await hash(password, salt);
 
         let getSql = await this.sequelize.query(`SELECT * FROM user_list WHERE email = "${email}"`, { type: QueryTypes.SELECT, raw: true });
-
-        if(getSql.length > 0) return res.status(400).send('Error ! This email is already use !');
+        
+        if(getSql.length > 0) throw new BadRequestException('Error ! This email is already use !');
 
         await this.sequelize.query(`INSERT INTO user_list (email, password, facility) VALUES ("${email}", "${Hash}", "${facility}")`, { type: QueryTypes.INSERT });
 
@@ -30,7 +30,7 @@ export class ConnexionService {
     
             return res.redirect('/');
         } catch(err) {
-            return res.status(400).send(err);
+            throw new BadRequestException(err);
         }
     }
 
@@ -40,12 +40,12 @@ export class ConnexionService {
 
         let getSql = await this.sequelize.query(`SELECT * FROM user_list WHERE email = "${email}"`, { type: QueryTypes.SELECT, raw: true });
 
-        if(getSql.length < 1) return res.status(400).send('Incorrect email !');
+        if(getSql.length < 1) throw new BadRequestException('Incorrect email !');
         
         for(var e = 0; e < getSql.length; e++) {
             let cPassword = await compare(password, getSql[e]['password']);
 
-            if(!cPassword) return res.status(400).send('Incorrect password !');
+            if(!cPassword) throw new BadRequestException('Incorrect password !');
             
             req.session.user_id = getSql[e]['vid'];
 

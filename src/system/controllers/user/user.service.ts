@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { QueryTypes } from 'sequelize';
 
@@ -64,13 +64,13 @@ export class UserService {
     
                     return res.redirect('/user/profile');
                 } catch(err) {
-                    return res.status(500).send(err);
+                    throw new InternalServerErrorException(err);
                 }
             } else {
-                return res.status(401).send('Before edit an book, you must do book an position !');
+                throw new UnauthorizedException('Before edit an book, you must do book an position !');
             }
         } else {
-            return res.status(400).send('Error, verify your time !');
+            throw new BadRequestException('Error, verify your time !');
         }
     }
 

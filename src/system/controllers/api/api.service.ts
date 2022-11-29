@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { QueryTypes } from 'sequelize';
+import { Booking } from '../../../models/Booking';
 
 @Injectable()
 export class ApiService {
     constructor(private readonly sequelize: Sequelize) {}
 
     async findUser(id:any) {
-        return await this.sequelize.query(`SELECT * FROM booking_list WHERE id = ${id}`, { type: QueryTypes.SELECT });
+        return await (await Booking.findOne({ where: { id: id } })).toJSON();
+        // return await this.sequelize.query(`SELECT * FROM booking_list WHERE id = ${id}`, { type: QueryTypes.SELECT });
     }
 
     async getCalendar(day:any) {
@@ -25,7 +27,7 @@ export class ApiService {
 
         if(start_time !== end_time || end_time !== start_time) {
             let Is = await this.sequelize.query(`SELECT * FROM booking_list WHERE user = "${session.user_id}"`, { type: QueryTypes.SELECT, raw: true });
-
+            
             if(Is.length < 1) {
                 try {
                     let sql = `INSERT INTO booking_list (user, start_hour, end_hour, day, position, voice, training, event) VALUES ('${session.user_id}', '${start_time}', '${end_time}', '${date}', '${position}', ${parseInt(voice) ? parseInt(voice) : 0}, ${parseInt(training) ? parseInt(training) : 0}, ${parseInt(event) ? parseInt(event) : 0})`;
@@ -34,13 +36,13 @@ export class ApiService {
     
                     return res.redirect('/');
                 } catch(err) {
-                    return res.status(500).send(err);
+                    throw new InternalServerErrorException(err);
                 }
             } else {
-                return res.status(401).send('You are already book an position !');
+                throw new UnauthorizedException('You are already book an position !');
             }
         } else {
-            return res.status(400).send('Error, verify your time !');
+            throw new BadRequestException('Error, verify your time !');
         }
     }
 }
