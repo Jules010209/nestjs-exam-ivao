@@ -65,9 +65,11 @@ export class UserService {
                         voice: parseInt(voice) ? parseInt(voice) : 0,
                         training: parseInt(training) ? parseInt(training) : 0,
                         event: parseInt(event) ? parseInt(event) : 0,
-                    }, { where: { user: session.user_id } });
-
-                    return res.redirect('/user/profile');
+                    }, { where: { user: session.user_id } }).then(() => {
+                        return res.redirect('/user/profile');
+                    }).catch((err) => {
+                        throw new InternalServerErrorException(err);
+                    });
                 } catch(err) {
                     throw new InternalServerErrorException(err);
                 }
@@ -80,8 +82,8 @@ export class UserService {
     }
 
     async deleteBook(res:any, session:any) {
-        Booking.destroy({ where: { user: session.user_id } });
-
-        return res.redirect('/');
+        Booking.destroy({ where: { user: session.user_id } }).then(() => {
+            return res.redirect('/');
+        });
     }
 }

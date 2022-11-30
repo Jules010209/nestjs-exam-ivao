@@ -15,21 +15,19 @@ export class ConnexionService {
         let getSql = await User.findAndCountAll({ where: { email: email } });
         if(getSql.count > 0) throw new BadRequestException('Error ! This email is already use !');
 
-        try {
-            User.create({
-                email: email,
-                password: Hash,
-                facility: facility
-            }).then(async () => {
-                let user = await User.findOne({ where: { email: email }, raw: true });
-    
-                session.user_id = user['vid'];
-    
-                return res.redirect('/');
-            });
-        } catch(err) {
+        User.create({
+            email: email,
+            password: Hash,
+            facility: facility
+        }).then(async () => {
+            let user = await User.findOne({ where: { email: email }, raw: true });
+
+            session.user_id = user['vid'];
+
+            return res.redirect('/');
+        }).catch((err) => {
             throw new InternalServerErrorException(err);
-        }
+        });
     }
 
     async loginCallback(body:any, res:any, req:any) {

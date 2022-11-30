@@ -34,9 +34,11 @@ export class ApiService {
                         voice: parseInt(voice) ? parseInt(voice) : 0,
                         training: parseInt(training) ? parseInt(training) : 0,
                         event: parseInt(event) ? parseInt(event) : 0,
+                    }).then(() => {
+                        return res.redirect('/');
+                    }).catch((err) => {
+                        throw new InternalServerErrorException(err);
                     });
-    
-                    return res.redirect('/');
                 } catch(err) {
                     throw new InternalServerErrorException(err);
                 }
