@@ -84,6 +84,8 @@ export class UserService {
     async deleteBook(res:any, session:any) {
         Booking.destroy({ where: { user: session.user_id } }).then(() => {
             return res.redirect('/');
+        }).catch((err) => {
+            throw new InternalServerErrorException(err);
         });
     }
 }
