@@ -1,5 +1,5 @@
 import { DataType } from 'sequelize-typescript';
-import { sequelize } from 'src/dto/database.dto';
+import { sequelize } from 'src/db/database';
 
 const User = sequelize.define('user', {
     vid: {

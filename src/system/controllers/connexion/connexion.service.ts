@@ -20,11 +20,13 @@ export class ConnexionService {
             password: Hash,
             facility: facility
         }).then(async () => {
-            let user = await User.findOne({ where: { email: email }, raw: true });
+            if(getSql.count < 1) {
+                let user = await User.findOne({ where: { email: email }, raw: true });
 
-            session.user_id = user['vid'];
+                session.user_id = user['vid'];
 
-            return res.redirect('/');
+                return res.redirect('/');
+            }
         }).catch((err) => {
             throw new InternalServerErrorException(err);
         });
