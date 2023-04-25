@@ -1,5 +1,6 @@
 import { Controller, Get, Render, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Request } from 'express';
 
 @Controller()
 export class AppController {
@@ -7,13 +8,13 @@ export class AppController {
 
     @Get()
     @Render('home')
-    root(@Req() req:any) {
+    root(@Req() req: Request) {
         return { session: req.session };
     }
 
     @Get('/atcs')
     @Render('atcs')
-    atcs(@Req() req:any) {
+    atcs(@Req() req: Request) {
         return { session: req.session };
     }
 }

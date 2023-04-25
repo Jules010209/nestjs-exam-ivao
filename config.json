@@ -6,11 +6,11 @@
         "secretSession": "Ab00sn309sf"
     },
     "db": {
-        "host": "",
-        "user": "",
-        "port": "",
-        "password": ""
-        "database": ""
+        "host": "mysql-jules010209.alwaysdata.net",
+        "user": "240983",
+        "port": "3306",
+        "password": "gestionadmin!",
+        "database": "jules010209_ivao_register"
     },
     "mainFile": "/src/main.ts"
 }

@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { application } from '../config.json';
 import * as session from 'express-session';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(session({

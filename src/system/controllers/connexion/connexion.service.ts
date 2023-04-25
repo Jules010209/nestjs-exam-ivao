@@ -4,7 +4,7 @@ import { User } from 'src/models/User';
 
 @Injectable()
 export class ConnexionService {
-    async registerCallback(body:any, res:any, session:any) {
+    async registerCallback(body: any, res: any, session: Record<string, any>) {
         let email = body.user_email_address;
         let password = body.user_password;
         let facility = body.facility;

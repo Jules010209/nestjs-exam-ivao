@@ -1,17 +1,18 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Booking } from '../../../models/Booking';
+import { Response } from 'express';
 
 @Injectable()
 export class ApiService {
-    async findUser(id:any) {
+    async findUser(id: number) {
         return await (await Booking.findOne({ where: { id: id } })).toJSON();
     }
 
-    async getCalendar(day:any) {
+    async getCalendar(day: any) {
         return await Booking.findAll({ where: { day: day } });
     }
 
-    async bookPosition(body:any, res:any, session:any) {
+    async bookPosition(body: any, res: Response, session: Record<string, any>) {
         let start_time = body.start_hour;
         let end_time = body.end_hour;
         let date = body.day;

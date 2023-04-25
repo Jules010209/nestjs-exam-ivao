@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/models/User';
 import { Booking } from 'src/models/Booking';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
-    async getProfile(session:any) {
+    async getProfile(session: Record<string, any>) {
         let query_a = await User.findOne({ where: { vid: session.user_id }, raw: true });
 
         let db_a = {
@@ -43,7 +44,7 @@ export class UserService {
         return { session: session, db_a: db_a, db_b: db_b };
     }
 
-    async postEditProfile(body:any, res:any, session:any) {
+    async postEditProfile(body: any, res: Response, session: Record<string, any>) {
         let start_time = body.start_hour;
         let end_time = body.end_hour;
         let date = body.day;
@@ -81,7 +82,7 @@ export class UserService {
         }
     }
 
-    async deleteBook(res:any, session:any) {
+    async deleteBook(res: Response, session: Record<string, any>) {
         Booking.destroy({ where: { user: session.user_id } }).then(() => {
             return res.redirect('/');
         }).catch((err) => {
